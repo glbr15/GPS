@@ -35,5 +35,10 @@ public class GPSModeActivity extends AppCompatActivity {
         protected String doInBackground(Integer... params) {
             return null;
         }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
     }
 }
