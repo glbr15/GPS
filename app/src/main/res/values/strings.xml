@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">GPS2</string>
+    <string name="textLeft">Start Left</string>
+    <string name="textRight">Start Right</string>
+    <string name="buttonGetLocation">Get Location</string>
+    <string name="longitude">Longitude - Länge</string>
+    <string name="latitude">Latitude - Breite</string>
+    <string name="buttonEnter">Enter</string>
+    <string name="title_activity_gpsmode">GPSModeActivity</string>
+
+    <!--Menues-->
+    <string name="gpsMode">GPS Modus</string>
+
+</resources>
