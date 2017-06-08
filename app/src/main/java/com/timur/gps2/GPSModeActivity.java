@@ -3,10 +3,13 @@ package com.timur.gps2;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.hardware.GeomagneticField;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -15,16 +18,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class GPSModeActivity extends AppCompatActivity {
+public class GPSModeActivity extends AppCompatActivity implements SensorEventListener{
 
     private ImageView image;
     private TextView distanceText;
-    private double latHome;
-    private double longHome;
-    Location destination;
+    private TextView bearingText;
+    private TextView headingText;
 
+    private Location actualLocation;
+    private Location destination;
     private LocationManager locationManager;
     private LocationListener locationListener;
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
+    private Float azimut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +41,8 @@ public class GPSModeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gpsmode);
 
         distanceText = (TextView) findViewById(R.id.textViewDistance);
+        bearingText = (TextView) findViewById(R.id.textViewBearing);
+        headingText = (TextView) findViewById(R.id.textViewHeading);
         image = (ImageView) findViewById(R.id.imageViewArrow);
         int width = image.getWidth();
         int height = image.getHeight();
@@ -44,39 +55,19 @@ public class GPSModeActivity extends AppCompatActivity {
             image.setMaxWidth(height);
         }
 
-        /** original coordinates
-        latHome = 49.59614003;
-        longHome = 10.95803477;
-         */
-
-        latHome = 49.54682;
-        longHome = 10.7895;
         destination = new Location("");
-        destination.setLatitude(latHome);
-        destination.setLongitude(longHome);
+        destination.setLatitude(49.595644);
+        destination.setLongitude(10.952686);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                float[] result = new float[1];
-                Location.distanceBetween(latHome, longHome, location.getLatitude(), location.getLongitude(), result);
-                distanceText.append("\n"+"Distance: " + Integer.toString((int)result[0]));
+                float[] distance = new float[1];
+                Location.distanceBetween(destination.getLatitude(), destination.getLongitude(), location.getLatitude(), location.getLongitude(), distance);
+                distanceText.setText("Distance: " + Integer.toString((int)distance[0])+"m");
 
-                float bearing = location.bearingTo(destination);
-                distanceText.append("\n"+"Bearing: "+bearing);
-
-                double altitude = location.getAltitude();
-                distanceText.append("\n"+"Altitude: "+altitude);
-
-                GeomagneticField geoField = new GeomagneticField(
-                        Double.valueOf(location.getLatitude()).floatValue(),
-                        Double.valueOf(location.getLongitude()).floatValue(),
-                        Double.valueOf(location.getAltitude()).floatValue(),
-                        System.currentTimeMillis());
-
-                float declination = geoField.getDeclination();
-                distanceText.append("\n"+"Declination: "+declination);
+                actualLocation = location;
             }
 
             @Override
@@ -95,6 +86,10 @@ public class GPSModeActivity extends AppCompatActivity {
             }
         };
 
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
         gpsUpdate();
     }
 
@@ -109,5 +104,60 @@ public class GPSModeActivity extends AppCompatActivity {
         }
         //request a new Location every 2seconds, no movement neeeded for new Location
         locationManager.requestLocationUpdates("gps", 2000, 0, locationListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        //NOP
+    }
+
+    float[] mGravity;
+    float[] mGeomagnetic;
+    GeomagneticField geoField;
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            mGravity = event.values;
+        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+            mGeomagnetic = event.values;
+        if (mGravity != null && mGeomagnetic != null) {
+            float R[] = new float[9];
+            float I[] = new float[9];
+            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+            if (success) {
+                float orientation[] = new float[3];
+                SensorManager.getOrientation(R, orientation);
+                azimut = orientation[0]; // orientation contains: azimut, pitch and roll
+
+                float bearing = -azimut*360/(2*3.14159f);
+                if(actualLocation != null) {
+                    geoField = new GeomagneticField(
+                            Double.valueOf(actualLocation.getLatitude()).floatValue(),
+                            Double.valueOf(actualLocation.getLongitude()).floatValue(),
+                            Double.valueOf(actualLocation.getAltitude()).floatValue(),
+                            System.currentTimeMillis()
+                    );
+                    bearing += geoField.getDeclination();   //Korrektur der Ortsmissweisung
+                }
+                bearingText.setText("Bearing: "+Float.toString(Math.round(bearing)));
+
+                if(actualLocation != null){
+                    float heading = actualLocation.bearingTo(destination);
+                    heading = bearing - heading;
+                    headingText.setText("Heading: "+Float.toString(Math.round(heading)));
+                }
+            }
+        }
     }
 }
