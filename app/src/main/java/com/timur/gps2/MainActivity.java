@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        buttonEnter = (Button) findViewById(R.id.buttonEnter);
         buttonLocate = (Button) findViewById(R.id.buttonGetLocation);
         textLeft = (TextView) findViewById(R.id.textLeft);
         textRight = (TextView) findViewById(R.id.textRight);
@@ -152,13 +153,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configureEnter(){
-        editLong = (EditText) findViewById(R.id.editTextLongitude);
-        editLat = (EditText) findViewById(R.id.editTextLatitude);
-        buttonEnter = (Button) findViewById(R.id.buttonEnter);
+        buttonEnter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editLong = (EditText) findViewById(R.id.editTextLongitude);
+                editLat = (EditText) findViewById(R.id.editTextLatitude);
+                buttonEnter = (Button) findViewById(R.id.buttonEnter);
 
-        Intent intent = new Intent(this,GPSModeActivity.class);
-        intent.putExtra("Latitude",editLat.getText().toString());
-        intent.putExtra("Longitude",editLong.getText().toString());
-        startActivity(intent);
+                //Timur daheim
+                String latitude = "49.59616331";
+                String longitude = "10.95821912";
+
+                if(editLat.getText().length() != 0 || editLong.getText().length() != 0){
+                    latitude = editLat.getText().toString();
+                    longitude = editLong.getText().toString();
+                }
+
+                Intent intent = new Intent(MainActivity.this,GPSModeActivity.class);
+                intent.putExtra("Latitude",latitude);
+                intent.putExtra("Longitude",longitude);
+                startActivity(intent);
+            }
+        });
     }
 }

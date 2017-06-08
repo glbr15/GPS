@@ -60,13 +60,8 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
         String latitude = intent.getStringExtra("Latitude");
         String longitude = intent.getStringExtra("Longitude");
         destination = new Location("");
-        if(latitude == null && longitude == null){
-            destination.setLatitude(49.595644);
-            destination.setLongitude(10.952686);
-        }else{
-            destination.setLatitude(Double.parseDouble(latitude));
-            destination.setLongitude(Double.parseDouble(longitude));
-        }
+        destination.setLatitude(Double.parseDouble(latitude));      //possible error is caught in MainActivity
+        destination.setLongitude(Double.parseDouble(longitude));
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
