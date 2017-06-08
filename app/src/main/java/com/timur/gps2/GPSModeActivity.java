@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 public class GPSModeActivity extends AppCompatActivity implements SensorEventListener{
 
-    private ImageView image;
+    private ImageView arrowImage;
     private TextView distanceText;
     private TextView bearingText;
     private TextView headingText;
@@ -43,16 +43,16 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
         distanceText = (TextView) findViewById(R.id.textViewDistance);
         bearingText = (TextView) findViewById(R.id.textViewBearing);
         headingText = (TextView) findViewById(R.id.textViewHeading);
-        image = (ImageView) findViewById(R.id.imageViewArrow);
-        int width = image.getWidth();
-        int height = image.getHeight();
+        arrowImage = (ImageView) findViewById(R.id.imageViewArrow);
+        int width = arrowImage.getWidth();
+        int height = arrowImage.getHeight();
 
         if (width < height) {
-            image.setMinimumHeight(width);
-            image.setMaxHeight(width);
+            arrowImage.setMinimumHeight(width);
+            arrowImage.setMaxHeight(width);
         } else {
-            image.setMinimumWidth(height);
-            image.setMaxWidth(height);
+            arrowImage.setMinimumWidth(height);
+            arrowImage.setMaxWidth(height);
         }
 
         destination = new Location("");
@@ -156,6 +156,8 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
                     float heading = actualLocation.bearingTo(destination);
                     heading = bearing - heading;
                     headingText.setText("Heading: "+Float.toString(Math.round(heading)));
+
+                    arrowImage.setRotation(90f + heading);
                 }
             }
         }
