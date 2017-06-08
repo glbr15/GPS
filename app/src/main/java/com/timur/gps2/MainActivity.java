@@ -156,27 +156,9 @@ public class MainActivity extends AppCompatActivity {
         editLat = (EditText) findViewById(R.id.editTextLatitude);
         buttonEnter = (Button) findViewById(R.id.buttonEnter);
 
-        buttonEnter.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                locationManager.requestLocationUpdates("gps", 2500, 10, locationListener);
-
-                if(actualPosition != null && editLat.getText() != null && editLong.getText() != null) {
-                    double long1 = actualPosition.getLongitude();
-                    double lat1 = actualPosition.getLatitude();
-
-                    double long2 = Double.parseDouble(editLong.getText().toString());
-                    double lat2 = Double.parseDouble(editLat.getText().toString());
-
-                    float[] result = new float[1];
-                    Location.distanceBetween(lat1, long1, lat2, long2, result);
-
-                    String toShow = "Entfernung: "+Float.toString(Math.round(result[0]))+" m";
-                    Toast.makeText(getApplicationContext(),toShow,Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(getApplicationContext(),"No Location found",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        Intent intent = new Intent(this,GPSModeActivity.class);
+        intent.putExtra("Latitude",editLat.getText().toString());
+        intent.putExtra("Longitude",editLong.getText().toString());
+        startActivity(intent);
     }
 }

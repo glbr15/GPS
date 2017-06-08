@@ -1,6 +1,7 @@
 package com.timur.gps2;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
@@ -55,9 +56,17 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
             arrowImage.setMaxWidth(height);
         }
 
+        Intent intent = getIntent();
+        String latitude = intent.getStringExtra("Latitude");
+        String longitude = intent.getStringExtra("Longitude");
         destination = new Location("");
-        destination.setLatitude(49.595644);
-        destination.setLongitude(10.952686);
+        if(latitude == null && longitude == null){
+            destination.setLatitude(49.595644);
+            destination.setLongitude(10.952686);
+        }else{
+            destination.setLatitude(Double.parseDouble(latitude));
+            destination.setLongitude(Double.parseDouble(longitude));
+        }
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
