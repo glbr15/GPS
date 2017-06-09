@@ -144,7 +144,10 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
                 SensorManager.getOrientation(R, orientation);
                 azimut = orientation[0]; // orientation contains: azimut, pitch and roll
 
-                float bearing = -azimut*360/(2*3.14159f);
+                float bearing = (azimut*180)/(3.1415f);
+                if(bearing < 0){
+                    bearing = 360f + bearing;
+                }
                 if(actualLocation != null) {
                     geoField = new GeomagneticField(
                             Double.valueOf(actualLocation.getLatitude()).floatValue(),
@@ -158,10 +161,13 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
 
                 if(actualLocation != null){
                     float heading = actualLocation.bearingTo(destination);
-                    heading = bearing - heading;
+                    if(heading < 0){
+                        heading = 360f + heading;
+                    }
+                    heading = heading - bearing;
                     headingText.setText("Heading: "+Float.toString(Math.round(heading)));
 
-                    arrowImage.setRotation(90f + heading);
+                    arrowImage.setRotation(-90f + heading);
                 }
             }
         }
