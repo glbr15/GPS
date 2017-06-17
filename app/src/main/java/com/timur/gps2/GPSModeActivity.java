@@ -164,7 +164,7 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
                     if(heading < 0){
                         heading = 360f + heading;
                     }
-                    //heading = bearing - heading;
+
                     float arrowHeading = heading - bearing;
                     headingText.setText("Heading: "+Float.toString(Math.round(heading)));
 
