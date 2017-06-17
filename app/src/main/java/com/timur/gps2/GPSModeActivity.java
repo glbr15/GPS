@@ -23,8 +23,8 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
 
     private ImageView arrowImage;
     private TextView distanceText;
-    private TextView bearingText;
-    private TextView headingText;
+    private TextView bearingText;       //aktuelle Ausrichtung | Abweichung des Handys zum Nordpol
+    private TextView headingText;       //Kurs der gelaufen werden muss
 
     private Location actualLocation;
     private Location destination;
@@ -164,10 +164,11 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
                     if(heading < 0){
                         heading = 360f + heading;
                     }
-                    heading = heading - bearing;
+                    //heading = bearing - heading;
+                    float arrowHeading = heading - bearing;
                     headingText.setText("Heading: "+Float.toString(Math.round(heading)));
 
-                    arrowImage.setRotation(-90f + heading);
+                    arrowImage.setRotation(-90f + arrowHeading);
                 }
             }
         }
