@@ -27,7 +27,16 @@
             android:label="@string/title_activity_gpsmode">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".SavePositionActivity"
+            android:label="@string/title_activity_save_position"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
     </application>
 

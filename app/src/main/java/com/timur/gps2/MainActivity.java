@@ -90,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.gpsMode){
-            Intent intent = new Intent(this,GPSModeActivity.class);
+        if(id == R.id.savePosition){
+            Intent intent = new Intent(this,SavePositionActivity.class);
             startActivity(intent);
             return true;
         }
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Warnung kann ignoriert werden da der Check zuvor durchgeführt wird
                 // -provider- -refreshing time- -minDistance refresh- -location Listener-
-                locationManager.requestLocationUpdates("gps", 2500, 10, locationListener);
+                locationManager.requestLocationUpdates("gps", 2500, 15, locationListener);
                 if(actualPosition != null) {
                     textLeft.append("\n" + actualPosition.getLatitude());
                     textRight.append("\n" + actualPosition.getLongitude());
