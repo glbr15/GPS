@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Location actualPosition;
 
-    //TODO: falls keine Location vorhanden -> Fehler mit if abfangen!!
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

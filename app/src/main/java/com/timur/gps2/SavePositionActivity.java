@@ -3,6 +3,8 @@ package com.timur.gps2;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +12,9 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,7 +23,7 @@ public class SavePositionActivity extends AppCompatActivity {
 
     //TODO: Möglichkeit Orte zu löschen
     //TODO: Möglichkeit alle Orte zu löschen
-    //TODO: Orte direkt per GPS eintragen (evtl. mit aus vorheriger Activity kopieren
+    //TODO: Orte direkt per GPS eintragen (evtl. mit aus vorheriger Activity kopieren)
 
     public static final String TEXTFILE = "ortspeicher.txt";
 
@@ -40,6 +44,23 @@ public class SavePositionActivity extends AppCompatActivity {
         datenAusgeben();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_save_position,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.deleteAllLocations){
+            File file = getFileStreamPath(TEXTFILE);
+            file.delete();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void ortAnlegen(){
         ortAnlegen = (Button) findViewById(R.id.ortAnlegen);
         editLat = (EditText) findViewById(R.id.saveLat);
@@ -53,9 +74,9 @@ public class SavePositionActivity extends AppCompatActivity {
                 if(editLat.getText().length() > 0 && editLong.getText().length() > 0 && editLocation.getText().length() > 0){
                     try {
                         FileOutputStream fos = openFileOutput(TEXTFILE, Context.MODE_APPEND);
-                        String query = "\n" + editLat.getText().toString();
+                        String query = "\n" + editLocation.getText().toString();
+                        query += " " + editLat.getText().toString();
                         query += " " + editLong.getText().toString();
-                        query += " " + editLocation.getText().toString();
                         fos.write(query.getBytes());
                         fos.close();
                     } catch (IOException e) {
@@ -75,6 +96,7 @@ public class SavePositionActivity extends AppCompatActivity {
         getData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                outputText.setText("");
                 try {
                     FileInputStream fis = openFileInput(TEXTFILE);
                     BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(fis)));

@@ -13,5 +13,6 @@
     <!--Menues-->
     <string name="gpsMode">GPS Modus</string>
     <string name="savePosition">Orte anlegen</string>
+    <string name="deleteAllLocations">Alle Orte löschen</string>
 
 </resources>
