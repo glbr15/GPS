@@ -1,5 +1,6 @@
 package com.timur.gps2;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -7,33 +8,85 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class SavePositionActivity extends AppCompatActivity {
+
+    //TODO: Möglichkeit Orte zu löschen
+    //TODO: Möglichkeit alle Orte zu löschen
+    //TODO: Orte direkt per GPS eintragen (evtl. mit aus vorheriger Activity kopieren
+
+    public static final String TEXTFILE = "ortspeicher.txt";
 
     private Button ortAnlegen;
     private EditText editLat;
     private EditText editLong;
     private EditText editLocation;
 
+    //Testbereich
+    private Button getData;
+    private EditText outputText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_position);
         ortAnlegen();
+        datenAusgeben();
     }
 
     private void ortAnlegen(){
         ortAnlegen = (Button) findViewById(R.id.ortAnlegen);
-        editLat = (EditText) findViewById(R.id.editTextLatitude);
-        editLong = (EditText) findViewById(R.id.editTextLongitude);
-        editLocation = (EditText) findViewById(R.id.eingabeOrt);
+        editLat = (EditText) findViewById(R.id.saveLat);
+        editLong = (EditText) findViewById(R.id.saveLong);
+        editLocation = (EditText) findViewById(R.id.saveOrt);
 
         ortAnlegen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(editLat.getText().length() > 0 && editLong.getText().length() > 0 && editLocation.getText().length() > 0){
-                    //TODO: Speicherzugriff
+                    try {
+                        FileOutputStream fos = openFileOutput(TEXTFILE, Context.MODE_APPEND);
+                        String query = "\n" + editLat.getText().toString();
+                        query += " " + editLong.getText().toString();
+                        query += " " + editLocation.getText().toString();
+                        fos.write(query.getBytes());
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }else{
                     Toast.makeText(getApplicationContext(),"Es müssen alle Felder ausgefüllt werden",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void datenAusgeben(){
+        getData = (Button) findViewById(R.id.getData);
+        outputText = (EditText) findViewById(R.id.outputText);
+
+        getData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    FileInputStream fis = openFileInput(TEXTFILE);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(fis)));
+                    String line;
+
+                    while((line = reader.readLine()) != null){
+                        outputText.append("\n"+line);
+                    }
+
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
