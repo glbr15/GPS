@@ -14,15 +14,13 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class SavePositionActivity extends AppCompatActivity {
 
-    //TODO: Möglichkeit Orte zu löschen
-    //TODO: Möglichkeit alle Orte zu löschen
+    //TODO: Möglichkeit einzelne Orte zu löschen
     //TODO: Orte direkt per GPS eintragen (evtl. mit aus vorheriger Activity kopieren)
 
     public static final String TEXTFILE = "ortspeicher.txt";
