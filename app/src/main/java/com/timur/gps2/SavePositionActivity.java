@@ -74,7 +74,7 @@ public class SavePositionActivity extends AppCompatActivity {
                         FileOutputStream fos = openFileOutput(TEXTFILE, Context.MODE_APPEND);
                         String query = "\n" + editLocation.getText().toString();
                         query += " " + editLat.getText().toString();
-                        query += " " + editLong.getText().toString();
+                        query += " " + editLong.getText().toString() + "|";
                         fos.write(query.getBytes());
                         fos.close();
                     } catch (IOException e) {
@@ -88,6 +88,7 @@ public class SavePositionActivity extends AppCompatActivity {
     }
 
     private void datenAusgeben(){
+        /**
         getData = (Button) findViewById(R.id.getData);
         outputText = (EditText) findViewById(R.id.outputText);
 
@@ -110,5 +111,6 @@ public class SavePositionActivity extends AppCompatActivity {
                 }
             }
         });
+         */
     }
 }
