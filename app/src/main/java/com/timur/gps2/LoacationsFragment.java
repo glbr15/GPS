@@ -20,7 +20,7 @@ import java.util.List;
 public class LoacationsFragment extends Fragment {
 
     public static final String TEXTFILE = "ortspeicher.txt";
-    ArrayAdapter<String> mAktienlisteAdapter;
+    ArrayAdapter<String> listAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,12 +44,15 @@ public class LoacationsFragment extends Fragment {
             fis.close();
         }catch(IOException e){}
 
-        String[] dataListArray = data.split("|");
+        //TODO: arrayList not scrollable if using data.split()
+        String[] dataListArray = data.split(";",data.length()-1);
+        //String[] dataListArray = data.split(";");
+        //String[] dataListArray = {"Hans","Peter","Jens","Hans","Peter","Jens","Hans","Peter","Jens"};
         List<String> dataList = new ArrayList<>(Arrays.asList(dataListArray));
 
-        mAktienlisteAdapter = new ArrayAdapter<>(getActivity(),R.layout.list_item_locations,R.id.list_item_locations_textview,dataList);
+        listAdapter = new ArrayAdapter<>(getActivity(),R.layout.list_item_locations,R.id.list_item_locations_textview,dataList);
         ListView loactionListeListView = (ListView) rootView.findViewById(R.id.listview_locations);
-        loactionListeListView.setAdapter(mAktienlisteAdapter);
+        loactionListeListView.setAdapter(listAdapter);
 
         return rootView;
     }
