@@ -7,6 +7,7 @@
     <string name="buttonEnter">Enter</string>
     <string name="ortsname">Name des Ortes</string>
     <string name="ortAnlegen">Ort anlegen</string>
+    <string name="saveThis">Aktuelle Position</string>
     <string name="title_activity_gpsmode">GPSModeActivity</string>
     <string name="title_activity_save_position">SavePositionActivity</string>
 

@@ -1,6 +1,9 @@
 package com.timur.gps2;
 
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -8,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -25,7 +29,6 @@ public class SavePositionActivity extends AppCompatActivity {
 
     public static final String TEXTFILE = "ortspeicher.txt";
 
-    private Button ortAnlegen;
     private EditText editLat;
     private EditText editLong;
     private EditText editLocation;
@@ -38,8 +41,11 @@ public class SavePositionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_position);
+
+        editLat = (EditText) findViewById(R.id.saveLat);
+        editLong = (EditText) findViewById(R.id.saveLong);
         ortAnlegen();
-        datenAusgeben();
+        aktuellenOrtAnlegen();
     }
 
     @Override
@@ -60,9 +66,7 @@ public class SavePositionActivity extends AppCompatActivity {
     }
 
     private void ortAnlegen(){
-        ortAnlegen = (Button) findViewById(R.id.ortAnlegen);
-        editLat = (EditText) findViewById(R.id.saveLat);
-        editLong = (EditText) findViewById(R.id.saveLong);
+        Button ortAnlegen = (Button) findViewById(R.id.ortAnlegen);
         editLocation = (EditText) findViewById(R.id.saveOrt);
 
         ortAnlegen.setOnClickListener(new View.OnClickListener() {
@@ -87,30 +91,40 @@ public class SavePositionActivity extends AppCompatActivity {
         });
     }
 
-    private void datenAusgeben(){
-        /**
-        getData = (Button) findViewById(R.id.getData);
-        outputText = (EditText) findViewById(R.id.outputText);
-
-        getData.setOnClickListener(new View.OnClickListener() {
+    private void aktuellenOrtAnlegen(){
+        Button aktuellerOrt = (Button) findViewById(R.id.saveThis);
+        aktuellerOrt.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                outputText.setText("");
-                try {
-                    FileInputStream fis = openFileInput(TEXTFILE);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(fis)));
-                    String line;
-
-                    while((line = reader.readLine()) != null){
-                        outputText.append("\n"+line);
+            public void onClick(View v){
+                LocationManager locationManager;
+                LocationListener locationListener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        editLong.setText(location.getLongitude()+"");
+                        editLat.setText(location.getLatitude()+"");
                     }
 
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                };
+
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                try {
+                    locationManager.requestSingleUpdate("gps",locationListener, null);
+                }catch(SecurityException e){}
             }
         });
-         */
     }
 }
