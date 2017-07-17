@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class GPSModeActivity extends AppCompatActivity implements SensorEventListener{
+public class GPSModeActivity extends AppCompatActivity implements SensorEventListener {
 
     private ImageView arrowImage;
     private TextView distanceText;
@@ -69,7 +69,7 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
             public void onLocationChanged(Location location) {
                 float[] distance = new float[1];
                 Location.distanceBetween(destination.getLatitude(), destination.getLongitude(), location.getLatitude(), location.getLongitude(), distance);
-                distanceText.setText("Distance: " + Integer.toString((int)distance[0])+"m");
+                distanceText.setText("Distance: " + Integer.toString((int) distance[0]) + "m");
 
                 actualLocation = location;
             }
@@ -99,7 +99,7 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
 
     private void gpsUpdate() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET}, 10);
                 }
@@ -130,6 +130,7 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
     float[] mGravity;
     float[] mGeomagnetic;
     GeomagneticField geoField;
+
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             mGravity = event.values;
@@ -144,29 +145,30 @@ public class GPSModeActivity extends AppCompatActivity implements SensorEventLis
                 SensorManager.getOrientation(R, orientation);
                 azimut = orientation[0]; // orientation contains: azimut, pitch and roll
 
-                float bearing = (azimut*180)/(3.1415f);
-                if(bearing < 0){
+                float bearing = (azimut * 180) / (3.1415f);
+                if (bearing < 0) {
                     bearing = 360f + bearing;
                 }
-                if(actualLocation != null) {
+                if (actualLocation != null) {
                     geoField = new GeomagneticField(
                             Double.valueOf(actualLocation.getLatitude()).floatValue(),
                             Double.valueOf(actualLocation.getLongitude()).floatValue(),
                             Double.valueOf(actualLocation.getAltitude()).floatValue(),
                             System.currentTimeMillis()
                     );
+
                     bearing += geoField.getDeclination();   //Korrektur der Ortsmissweisung
                 }
-                bearingText.setText("Bearing: "+Float.toString(Math.round(bearing)));
+                bearingText.setText("Bearing: " + Float.toString(Math.round(bearing)));
 
-                if(actualLocation != null){
+                if (actualLocation != null) {
                     float heading = actualLocation.bearingTo(destination);
-                    if(heading < 0){
+                    if (heading < 0) {
                         heading = 360f + heading;
                     }
 
                     float arrowHeading = heading - bearing;
-                    headingText.setText("Heading: "+Float.toString(Math.round(heading)));
+                    headingText.setText("Heading: " + Float.toString(Math.round(heading)));
 
                     arrowImage.setRotation(-90f + arrowHeading);
                 }
