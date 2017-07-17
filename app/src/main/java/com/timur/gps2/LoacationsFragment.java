@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -46,7 +47,7 @@ public class LoacationsFragment extends Fragment {
 
         //TODO: arrayList not scrollable if using data.split() -> keine Ahnung warum
         String[] dataListArray = data.split(";");
-        //String[] dataListArray = {"Hans","Peter","Jens","Hans","Peter","Jens","Hans","Peter","Jens"};
+        //String[] dataListArray = {"Hans","Peter","Jens","Hans","Peter","Jens","Hans","Peter","Jens","Hans","Peter","Jens","Hans","Peter","Jens","Hans","Peter","Jens"};
         List<String> dataList = new ArrayList<>(Arrays.asList(dataListArray));
 
         listAdapter = new ArrayAdapter<>(getActivity(),R.layout.list_item_locations,R.id.list_item_locations_textview,dataList);

@@ -72,7 +72,7 @@ public class SavePositionActivity extends AppCompatActivity {
                 if(editLat.getText().length() > 0 && editLong.getText().length() > 0 && editLocation.getText().length() > 0){
                     try {
                         FileOutputStream fos = openFileOutput(TEXTFILE, Context.MODE_APPEND);
-                        String query = editLocation.getText().toString();
+                        String query = "\n" + editLocation.getText().toString();
                         query += " " + editLat.getText().toString();
                         query += " " + editLong.getText().toString() + " ;";
                         fos.write(query.getBytes());
