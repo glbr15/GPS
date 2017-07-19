@@ -1,5 +1,6 @@
 package com.timur.gps2;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,31 +12,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class SavePositionActivity extends AppCompatActivity {
 
     //TODO: Möglichkeit einzelne Orte zu löschen
-    //TODO: Orte direkt per GPS eintragen (evtl. mit aus vorheriger Activity kopieren)
 
     public static final String TEXTFILE = "ortspeicher.txt";
 
     private EditText editLat;
     private EditText editLong;
     private EditText editLocation;
-
-    //Testbereich
-    private Button getData;
-    private EditText outputText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +78,8 @@ public class SavePositionActivity extends AppCompatActivity {
                 }else{
                     Toast.makeText(getApplicationContext(),"Es müssen alle Felder ausgefüllt werden",Toast.LENGTH_LONG).show();
                 }
+
+                SavePositionActivity.this.refreshActivity();
             }
         });
     }
@@ -126,5 +119,13 @@ public class SavePositionActivity extends AppCompatActivity {
                 }catch(SecurityException e){}
             }
         });
+    }
+
+    public void refreshActivity(){
+        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragment);
+        if(currentFragment instanceof LoacationsFragment){
+            finish();
+            startActivity(getIntent());
+        }
     }
 }
