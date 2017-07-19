@@ -44,9 +44,7 @@ public class LoacationsFragment extends Fragment {
             fis.close();
         }catch(IOException e){}
 
-        //TODO: arrayList not scrollable if using data.split() -> keine Ahnung warum
         String[] dataListArray = data.split(";");
-        //String[] dataListArray = {"Hans","Peter","Jens","Hans","Peter","Jens","Hans","Peter","Jens","Hans","Peter","Jens","Hans","Peter","Jens","Hans","Peter","Jens"};
         List<String> dataList = new ArrayList<>(Arrays.asList(dataListArray));
 
         listAdapter = new ArrayAdapter<>(getActivity(),R.layout.list_item_locations,R.id.list_item_locations_textview,dataList);

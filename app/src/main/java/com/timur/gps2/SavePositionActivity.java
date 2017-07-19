@@ -21,6 +21,9 @@ import java.io.IOException;
 public class SavePositionActivity extends AppCompatActivity {
 
     //TODO: Möglichkeit einzelne Orte zu löschen
+    //TODO: App führt einen zu gespeichertem Ort
+    //TODO: Orte bearbeitbar
+    //TODO: txt-Datei ist exportierbar (man kann sie an einen PC senden)
 
     public static final String TEXTFILE = "ortspeicher.txt";
 

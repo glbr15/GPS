@@ -98,13 +98,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        //TODO: stop updating location
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        //TODO: resume updating location
         super.onResume();
     }
 
