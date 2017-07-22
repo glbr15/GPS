@@ -63,16 +63,12 @@ public class LoacationsFragment extends Fragment {
                 String array[] = ortInfo.split(" ");
                 String latitude = "";
                 String longitude = "";
-                boolean lat = true;
                 for(int i=0 ; i<array.length ; i++){
                     try{
                         Double.parseDouble(array[i]);
-                        if(lat){
-                            latitude = array[i];
-                            lat = false;
-                        }else{
-                            longitude = array[i];
-                        }
+                        latitude = array[i];
+                        longitude = array[i+1];
+                        break;
                     }catch(NumberFormatException e){}
                 }
 
