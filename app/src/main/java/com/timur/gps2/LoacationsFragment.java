@@ -1,12 +1,15 @@
 package com.timur.gps2;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -48,8 +51,37 @@ public class LoacationsFragment extends Fragment {
         List<String> dataList = new ArrayList<>(Arrays.asList(dataListArray));
 
         listAdapter = new ArrayAdapter<>(getActivity(),R.layout.list_item_locations,R.id.list_item_locations_textview,dataList);
-        ListView loactionListeListView = (ListView) rootView.findViewById(R.id.listview_locations);
-        loactionListeListView.setAdapter(listAdapter);
+        ListView locationListeListView = (ListView) rootView.findViewById(R.id.listview_locations);
+        locationListeListView.setAdapter(listAdapter);
+
+        //attach onClickListener to ListView
+        locationListeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String ortInfo = (String) parent.getItemAtPosition(position);
+
+                String array[] = ortInfo.split(" ");
+                String latitude = "";
+                String longitude = "";
+                boolean lat = true;
+                for(int i=0 ; i<array.length ; i++){
+                    try{
+                        Double.parseDouble(array[i]);
+                        if(lat){
+                            latitude = array[i];
+                            lat = false;
+                        }else{
+                            longitude = array[i];
+                        }
+                    }catch(NumberFormatException e){}
+                }
+
+                Intent intent = new Intent(getActivity(),GPSModeActivity.class);
+                intent.putExtra("Latitude",latitude);
+                intent.putExtra("Longitude",longitude);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }
